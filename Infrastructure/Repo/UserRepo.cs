@@ -60,23 +60,45 @@ namespace Infrastructure.Repo
         private async Task<ApplicationUser> FindUserByEmail(string email) =>
             await applicationDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
+l        //public async Task<RegistrationResponse> RegisterUserAsync(RegisterUserDTO registerUserDTO)
+        //{
+        //    var getUser = await FindUserByEmail(registerUserDTO.Email!);
+        //    if (getUser != null)
+        //    {
+        //        return new RegistrationResponse(false, "User already exists please login");
+
+        //    }
+        //    applicationDbContext.Users.Add(new ApplicationUser()
+        //    {
+        //        Name=registerUserDTO.Name,
+        //        Email=registerUserDTO.Email,
+        //        Password=registerUserDTO.Password,
+        //    });
+        //    await applicationDbContext.SaveChangesAsync();
+        //    return new RegistrationResponse(true, "registration successfull");
+
+        //}
         public async Task<RegistrationResponse> RegisterUserAsync(RegisterUserDTO registerUserDTO)
         {
             var getUser = await FindUserByEmail(registerUserDTO.Email!);
             if (getUser != null)
             {
                 return new RegistrationResponse(false, "User already exists please login");
-
             }
+
+            // Hash the password before saving it
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUserDTO.Password);
+
             applicationDbContext.Users.Add(new ApplicationUser()
             {
-                Name=registerUserDTO.Name,
-                Email=registerUserDTO.Email,
-                Password=registerUserDTO.Password,
+                Name = registerUserDTO.Name,
+                Email = registerUserDTO.Email,
+                Password = hashedPassword, // Save the hashed password
             });
-            await applicationDbContext.SaveChangesAsync();
-            return new RegistrationResponse(true, "registration successfull");
 
+            await applicationDbContext.SaveChangesAsync();
+            return new RegistrationResponse(true, "Registration successful");
         }
+
     }
 }
