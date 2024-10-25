@@ -1,0 +1,38 @@
+﻿@page "/login"
+@using Application.DTOs
+@using BlazorWASM.States
+@using NetcodeHub.Packages.Components.Validations.OnInput
+
+<div class="row">
+    <div class="col-lg-5">
+        <div class="alert alert-info mb-3">@Message</div>
+        <EditForm Model="LoginModel" OnValidSubmit="LoginAsync">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+        <FloatingText @bind-Value="LoginModel.Email" Label="Email" Placeholder="JohnDoe@gmail.com" class="from-control mb-3" Type="email" />
+            <FloatingText @bind-Value=LoginModel.Password Label="Password" Type="=password" class="form-control mb-3" />
+        <button class="btn btn-primary mb-3" type="submit">Login</button>
+        <ValidationSummary class="text-danger"/>
+        </EditForm>
+    </div>
+</div>
+<h3>LoginPage</h3>
+
+@code {
+    string Message = string.Empty;
+    LoginDTO LoginModel = new();
+    async Task LoginAsync()
+    {
+        Message = null;
+        var result = await AccountService.LoginAccountAsyc(LoginModel);
+        if(result.Flag)
+        {
+            var customAuthStateProvider = (CustomAunthenticationStateProvider)AuthStateProvider;
+            await customAuthStateProvider.UpdateAuthenticationState(result.Token);
+            NavManager.NavigateTo("/", forceLoad: true);
+        }
+        else
+        {
+            Message = result.Message;
+        }
+    }
+}

@@ -62,7 +62,8 @@ namespace BlazorWASM.States
                         return;
 
                 var setClaims=SetClaimPrincipal(name,email);
-                if(setClaims is null) return;       
+                if(setClaims is null) return;
+                await localStorageService.SetItemAsStringAsync(LocalStorageKey, jwtToken);
             }
             else
             {

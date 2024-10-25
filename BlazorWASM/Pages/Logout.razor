@@ -1,0 +1,12 @@
+﻿@page "/logout"
+@using BlazorWASM.States
+<h3>Logout</h3>
+
+@code {
+    protected async override Task OnInitializedAsync()
+    {
+        var customAuthStateProvider = (CustomAunthenticationStateProvider)AuthStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null!);
+        NavManager.NavigateTo("/", forceLoad: true);
+    }
+}

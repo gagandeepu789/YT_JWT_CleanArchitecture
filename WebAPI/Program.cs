@@ -1,4 +1,5 @@
 using Infrastructure.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +47,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+    
     app.UseSwaggerUI();
+    app.UseCors(policy =>
+    {
+        policy.WithOrigins("https://localhost:7123")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithHeaders(HeaderNames.ContentType);
+    });
 }
 
 app.UseHttpsRedirection();
