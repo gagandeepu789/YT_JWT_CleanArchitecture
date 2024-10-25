@@ -60,7 +60,7 @@ namespace Infrastructure.Repo
         private async Task<ApplicationUser> FindUserByEmail(string email) =>
             await applicationDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-l        //public async Task<RegistrationResponse> RegisterUserAsync(RegisterUserDTO registerUserDTO)
+        //public async Task<RegistrationResponse> RegisterUserAsync(RegisterUserDTO registerUserDTO)
         //{
         //    var getUser = await FindUserByEmail(registerUserDTO.Email!);
         //    if (getUser != null)
